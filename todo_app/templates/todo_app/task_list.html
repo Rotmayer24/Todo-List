@@ -1,0 +1,29 @@
+{% extend 'todo_app/base.html' %}
+{% block content %}
+
+<h2>My Tasks</h2>
+<a class="btn btn-primary mb-2" href="{% url 'task_create' %}">Create Task</a>
+
+<div class="mb-3">
+    <a href="?filter=all" class="btn btn-secondary" {% if filter=='all' %} active {% endif %}>All</a>
+    <a href="?filter=active" class="btn btn-warning" {% if filter=='active' %} active {% endif %}>Active</a>
+    <a href="?filter=completed" class="btn btn-success" {% if filter=='completed' %} active {% endif %}>Completed</a>
+</div>
+
+<ul class="list-group">
+    {% for task in tasks %}
+        <li class="list-group-item {% if task.completed %}list-group-item-success{% endif %}">
+            <strong>{{ task.title }}</strong> (до {{ task.deadline|default:"∞" }})
+            <div class="float-end">
+                <a href="{% url 'task_edit' task.pk %}" class="btn btn-sm btn-warning">✏️</a>
+                <a href="{% url 'task_complete_toggle' task.pk %}" class="btn btn-sm btn-info">{% if task.completed %}❌{% else %}✅{% endif %}</a>
+                <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-danger">🗑️</a>
+            </div>
+        </li>
+    {% empty %}
+        <li class="list-group-item">Немає задач</li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+
